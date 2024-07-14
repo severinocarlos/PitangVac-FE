@@ -1,0 +1,41 @@
+<div class="grid grid-cols-2 w-full min-h-screen">
+    <div class="flex items-center justify-center">        
+        <div class="w-1/2" id="login">
+            
+            <div class="flex flex-col gap-3 items-center">
+                <div class="flex flex-col items-center">
+                    <img class="w-16 h-16" src="assets/logo.png" alt="logo" />
+                    <h5>PitangVac</h5>
+
+                    <p class="text-slate-400">Faça login para agendar sua vacina</p>
+                </div>
+                <form [formGroup]="loginForm" (ngSubmit)="handleLogin()">
+                    <mat-form-field class="w-full">
+                        <mat-label>Login</mat-label>
+                        <input formControlName="login" placeholder="Digite seu login" matInput>
+                        <mat-error *ngIf="loginForm.get('login')?.hasError('required')">O campo de login é obrigatório</mat-error>
+                        <mat-error *ngIf="loginForm.get('login')?.hasError('maxlength')">O campo de login tem no máximo 50 caracteres</mat-error>
+                    </mat-form-field>
+                    
+                    <mat-form-field class="w-full">
+                        <mat-label>Senha</mat-label>
+                        <input type="password" formControlName="password" placeholder="*******" matInput>
+                        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">O campo de senha é obrigatório</mat-error>
+                        <mat-error *ngIf="invalidLoginMessage">{{ invalidLoginMessage }}</mat-error>
+                    </mat-form-field>
+
+                    <p class="text-center text-red-500" *ngIf="invalidLoginMessage">{{ invalidLoginMessage }}</p>
+                    <button class="w-full mt-8" type="submit" mat-flat-button>Login</button>
+                </form>
+
+                <div class="mt-4">
+                    <p>Não tem conta? <a class="text-[#4C3BCF]" href="">Faça cadastro aqui</a></p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="bg-[#4C3BCF]">
+    </div>
+</div>
