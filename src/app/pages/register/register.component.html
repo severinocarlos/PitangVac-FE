@@ -3,8 +3,7 @@
         <div class="flex flex-col items-center">
             <img class="w-16 h-16" src="assets/logo.png" alt="logo" />
             <h5>PitangVac</h5>
-        
-            <p class="text-slate-400">Cadastre-se</p>
+            <p class="text-gray-500">Cadastre-se</p>
         </div>
 
         <form [formGroup]="registerForm" (ngSubmit)="handleRegister()">
@@ -25,8 +24,6 @@
                 </mat-form-field>
             </div>
            
-
-
             <mat-form-field class="w-full">
                 <mat-label>Email</mat-label>
                 <input type="email" formControlName="email" placeholder="Digite seu login" matInput>
@@ -34,7 +31,6 @@
                 <mat-error *ngIf="registerForm.get('email')?.hasError('email')">Email inválido</mat-error>
                 <mat-error *ngIf="registerForm.get('email')?.hasError('exist')">Email já possui cadastro</mat-error>
             </mat-form-field>
-
 
             <mat-form-field class="w-full">
                 <mat-label>Senha</mat-label>
@@ -45,7 +41,6 @@
                     <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
             </mat-form-field>
-
 
             <mat-form-field>
                 <mat-label>Data de nascimento</mat-label>
