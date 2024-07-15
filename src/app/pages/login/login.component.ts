@@ -9,6 +9,7 @@ import { Login } from '../../interfaces/login';
 import { ApiError } from '../../interfaces/apiError';
 import { RouterLink } from '@angular/router';
 import { BaseBackgroundComponent } from '../../components/base-background/base-background.component';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 
 @Component({
@@ -21,7 +22,8 @@ import { BaseBackgroundComponent } from '../../components/base-background/base-b
     MatButtonModule,
     CommonModule,
     RouterLink,
-    BaseBackgroundComponent
+    BaseBackgroundComponent,
+    FooterComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

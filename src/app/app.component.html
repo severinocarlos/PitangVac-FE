@@ -2,3 +2,7 @@
     <app-header></app-header>
 }
 <router-outlet></router-outlet>
+
+@if (isAuthenticated | async) {
+    <app-footer></app-footer>
+}

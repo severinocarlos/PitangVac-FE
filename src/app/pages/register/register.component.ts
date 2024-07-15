@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ApiError } from '../../interfaces/apiError';
 import { PatientRegister } from '../../interfaces/patient-register';
 import { Router } from '@angular/router';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-register',
@@ -31,7 +32,8 @@ import { Router } from '@angular/router';
     MatDatepickerModule,
     MatNativeDateModule,
     CommonModule,
-    MatIconModule
+    MatIconModule,
+    FooterComponent
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
