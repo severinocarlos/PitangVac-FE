@@ -7,6 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { LoginService } from '../../services/login/login.service';
 import { Login } from '../../interfaces/login';
 import { ApiError } from '../../interfaces/apiError';
+import { RouterLink } from '@angular/router';
+import { BaseBackgroundComponent } from '../../components/base-background/base-background.component';
 
 
 @Component({
@@ -17,7 +19,9 @@ import { ApiError } from '../../interfaces/apiError';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    CommonModule
+    CommonModule,
+    RouterLink,
+    BaseBackgroundComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
