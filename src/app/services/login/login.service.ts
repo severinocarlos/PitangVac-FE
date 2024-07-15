@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { apiUrl } from '../../../env/api';
 import { Login } from '../../interfaces/login';
 import { PatientToken } from '../../interfaces/patientToken';
-import { tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { ApiError } from '../../interfaces/apiError';
 
 @Injectable({
@@ -11,6 +11,9 @@ import { ApiError } from '../../interfaces/apiError';
 })
 export class LoginService {
   private _http = inject(HttpClient);
+
+  private isAuthenticated = new BehaviorSubject<boolean>(false);
+  isAuthenticated$ = this.isAuthenticated.asObservable();
 
   login(formLogin: Login) {
     return this._http.post<PatientToken>(apiUrl + 'Authentication/login', formLogin).pipe(
@@ -21,7 +24,8 @@ export class LoginService {
             throw apiError;
           }
         } else {
-          localStorage.setItem('token', response.token)
+          localStorage.setItem('token', response.token);
+          this.isAuthenticated.next(true);
         }
       })
     );
