@@ -1,0 +1,12 @@
+<header class="flex items-center justify-between py-4 px-7">
+    <div class="flex items-center gap-2">
+        <img class="w-8 h-8" src="assets/logo.png" alt="logo-pita">
+        <span class="text-xl">PitangVac</span>
+    </div>
+    <div>
+        <button mat-button [matMenuTriggerFor]="menu"><mat-icon>person</mat-icon></button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item>Sair <mat-icon>logout</mat-icon></button>
+        </mat-menu>
+    </div>
+</header>
