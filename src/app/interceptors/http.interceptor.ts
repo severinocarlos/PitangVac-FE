@@ -1,8 +1,9 @@
 import { HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { LoginService } from '../services/login/login.service';
-import { tap } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs';
 import { ApiError } from '../interfaces/apiError';
+import { PatientToken } from '../interfaces/patientToken';
 
 const urlIgnore = 'login';
 
@@ -29,6 +30,23 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
           throw apiError;
         }
       }
+    }),
+    catchError((error: ApiError) => {
+      if (error.HttpStatus === 401) {
+        return loginService.refreshToken().pipe(
+          switchMap((refreshToken: PatientToken) => {
+            const newReq = req.clone({
+              setHeaders: {
+                Authorization: `Bearer ${refreshToken.token}`
+              }
+            });
+
+            return next(newReq);
+          })
+        );
+      }
+
+      throw error;
     })
   );
 };
