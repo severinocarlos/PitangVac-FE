@@ -15,6 +15,10 @@ export class LoginService {
   private isAuthenticated = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticated.asObservable();
 
+  constructor() {
+    this.checkAuthentication();  
+  }
+
   login(formLogin: Login) {
     return this._http.post<PatientToken>(apiUrl + 'Authentication/login', formLogin).pipe(
       tap((response: PatientToken | ApiError) => {
@@ -29,5 +33,17 @@ export class LoginService {
         }
       })
     );
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  checkAuthentication() {
+    const token = this.getToken();
+
+    if (token) {
+      this.isAuthenticated.next(true);
+    }
   }
 }

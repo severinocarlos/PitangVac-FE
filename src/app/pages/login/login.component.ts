@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { LoginService } from '../../services/login/login.service';
 import { Login } from '../../interfaces/login';
 import { ApiError } from '../../interfaces/apiError';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { BaseBackgroundComponent } from '../../components/base-background/base-background.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 
@@ -31,6 +31,7 @@ import { FooterComponent } from '../../components/footer/footer.component';
 export class LoginComponent {
   formBuilder = inject(FormBuilder);
   loginService = inject(LoginService);
+  router = inject(Router);
   
   loginForm = this.formBuilder.group({
     login: ['', [Validators.required, Validators.maxLength(50)]],
@@ -47,7 +48,7 @@ export class LoginComponent {
     this.loginService.login(<Login>this.loginForm.value).subscribe({
       next: (_) => {
         this.invalidLoginMessage = '';
-        // TODO: Criar rota para tela inicial de agendamentos
+        this.router.navigate(['agendamentos']);
       }, error: (error: ApiError) => {
         this.invalidLoginMessage = error.Messages[0];
       }
