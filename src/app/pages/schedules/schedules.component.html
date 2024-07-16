@@ -1,0 +1,54 @@
+<div class="p-8">
+    <div class="flex items-center justify-between">
+        <span class="text-xl">Agendamentos</span>
+        <button mat-flat-button>Fazer agendamento</button>
+    </div>
+    
+    <div class="mt-4">
+        <table class="w-full" mat-table [dataSource]="dataSource" matSort class="mat-elevation-z3">
+        
+            <ng-container  matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Ordenar pelo nome">
+                    Nome
+                </th>
+                <td mat-cell *matCellDef="let schedule"> {{schedule.patient.name}} </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Ordenar pelo status">
+                    Status
+                </th>
+                <td mat-cell *matCellDef="let schedule"> {{schedule.status}} </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Ordenar pela data">
+                    Data agendada
+                </th>
+                <td mat-cell *matCellDef="let schedule"> {{schedule.schedulingDate | date: 'dd/MM/YYYY'}} </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="time">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Ordenar pela hora">
+                    Hora agendada
+                </th>
+                <td mat-cell *matCellDef="let schedule"> {{schedule.schedulingTime}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="scheduleIn">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Ordenar pela data do agendamento">
+                    Agendamento em
+                </th>
+                <td mat-cell *matCellDef="let schedule"> {{schedule.createAt | date: 'dd/MM/YYYY'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let schedule"> </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+</div>
