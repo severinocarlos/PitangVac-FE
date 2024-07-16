@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { LoginService } from '../../services/login/login.service';
 
 @Component({
   selector: 'app-header',
@@ -13,5 +14,9 @@ import { MatMenuModule } from '@angular/material/menu';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  private readonly loginService = inject(LoginService);
 
+  logout() {
+    this.loginService.logout();
+  } 
 }

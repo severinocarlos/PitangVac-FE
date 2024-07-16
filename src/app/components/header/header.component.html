@@ -6,7 +6,7 @@
     <div>
         <button mat-button [matMenuTriggerFor]="menu"><mat-icon>person</mat-icon></button>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item>Sair <mat-icon>logout</mat-icon></button>
+            <button (click)="logout()" mat-menu-item>Sair <mat-icon>logout</mat-icon></button>
         </mat-menu>
     </div>
 </header>

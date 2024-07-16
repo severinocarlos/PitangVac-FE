@@ -5,12 +5,14 @@ import { Login } from '../../interfaces/login';
 import { PatientToken } from '../../interfaces/patientToken';
 import { BehaviorSubject, tap } from 'rxjs';
 import { ApiError } from '../../interfaces/apiError';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  private _http = inject(HttpClient);
+  private readonly _http = inject(HttpClient);
+  private readonly router = inject(Router);
 
   private isAuthenticated = new BehaviorSubject<boolean>(false);
   isAuthenticated$ = this.isAuthenticated.asObservable();
@@ -33,6 +35,12 @@ export class LoginService {
         }
       })
     );
+  }
+
+  logout() {
+    localStorage.removeItem('token');
+    this.isAuthenticated.next(false);
+    this.router.navigate(['login']);
   }
 
   getToken(): string | null {
