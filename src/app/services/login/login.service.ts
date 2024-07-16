@@ -37,6 +37,10 @@ export class LoginService {
     );
   }
 
+  refreshToken() {
+    return this._http.get<PatientToken>(apiUrl + `Authentication/refresh-token`);
+  }
+
   logout() {
     localStorage.removeItem('token');
     this.isAuthenticated.next(false);
