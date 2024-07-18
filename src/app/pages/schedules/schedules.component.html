@@ -1,50 +1,62 @@
 <div class="p-8 content">
     <div class="flex items-center justify-between">
         <span class="text-xl">Agendamentos</span>
-        <button (click)="registerSchedule()" mat-flat-button>Fazer agendamento</button>
+        <button (click)="registerSchedule()" mat-flat-button>
+            <mat-icon>add</mat-icon> Agendar</button>
     </div>
     
     <div class="mt-4">
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z3">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z3">
         
-            <ng-container  matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Ordenar pelo nome">
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>
                     Nome
                 </th>
                 <td mat-cell *matCellDef="let schedule"> {{schedule.patient.name}} </td>
             </ng-container>
         
             <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Ordenar pelo status">
+                <th style="text-align: right;" mat-header-cell *matHeaderCellDef>
                     Status
                 </th>
-                <td mat-cell *matCellDef="let schedule"> {{schedule.status}} </td>
+                <td style="text-align: right;" mat-cell *matCellDef="let schedule"> 
+                    <app-status-card [type]="schedule.status"></app-status-card>
+                </td>
             </ng-container>
         
             <ng-container matColumnDef="date">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Ordenar pela data">
+                <th style="text-align: center;" mat-header-cell *matHeaderCellDef>
                     Data agendada
                 </th>
-                <td mat-cell *matCellDef="let schedule"> {{schedule.schedulingDate | date: 'dd/MM/YYYY'}} </td>
+                <td style="text-align: center;" mat-cell *matCellDef="let schedule"> {{schedule.schedulingDate | date: 'dd/MM/YYYY'}} </td>
             </ng-container>
         
             <ng-container matColumnDef="time">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Ordenar pela hora">
+                <th style="text-align: center;" mat-header-cell *matHeaderCellDef>
                     Hora agendada
                 </th>
-                <td mat-cell *matCellDef="let schedule"> {{schedule.schedulingTime}} </td>
+                <td style="text-align: center;" mat-cell *matCellDef="let schedule"> {{schedule.schedulingTime}} </td>
             </ng-container>
 
             <ng-container matColumnDef="scheduleIn">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Ordenar pela data do agendamento">
-                    Agendamento em
+                <th mat-header-cell *matHeaderCellDef>
+                    Feito em
                 </th>
                 <td mat-cell *matCellDef="let schedule"> {{schedule.createAt | date: 'dd/MM/YYYY'}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="actions">
+            <ng-container class="text-right" matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let schedule"> </td>
+                <td style="text-align: right;" mat-cell *matCellDef="let schedule">                    
+                    @if (schedule.status == ScheduleStatus.Agendado) {
+                        <button (click)="cancelSchedule(schedule.id)" class="mr-2" mat-icon-button>
+                            <mat-icon class="text-red-500">delete</mat-icon>
+                        </button>
+                        <button (click)="confirmSchedule(schedule.id)" mat-icon-button>
+                            <mat-icon class="text-green-500">done</mat-icon>
+                        </button>
+                    }
+                </td>
             </ng-container>
         
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

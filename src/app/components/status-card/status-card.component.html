@@ -1,0 +1,25 @@
+
+@switch (type) {
+    @case (ScheduleStatus.Agendado) {
+        <div class="whitespace-no-wrap">
+            <span class="inline-flex py-1 px-3 text-xs text-blue-800 bg-blue-100 rounded-full">
+                Agendado
+            </span>
+        </div>
+    }
+    @case (ScheduleStatus.Concluido) {
+        <div class="whitespace-no-wrap">
+            <span class="inline-flex py-1 px-3 text-xs text-green-800 bg-green-100 rounded-full">
+                Concluído
+            </span>
+        </div>
+    }
+    @default {
+        <div class="whitespace-no-wrap">
+            <span class="inline-flex py-1 px-3 text-xs text-red-800 bg-red-100 rounded-full">
+                Cancelado
+            </span>
+        </div>
+    }
+}
+
