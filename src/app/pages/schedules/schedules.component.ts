@@ -10,6 +10,7 @@ import { ModalService } from '../../services/modal/modal.service';
 import { StatusCardComponent } from '../../components/status-card/status-card.component';
 import { ScheduleStatus } from '../../enums/statusEnum';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '../../services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-schedules',
@@ -27,7 +28,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class SchedulesComponent implements OnInit {
   private readonly schedulesService = inject(SchedulesService);
   private readonly modalService = inject(ModalService);
-  private readonly _snackBar = inject(MatSnackBar);
+  private readonly snackBarService = inject(SnackbarService);
 
   private schedules: Schedules[] = [];
   ScheduleStatus = ScheduleStatus;
@@ -65,6 +66,9 @@ export class SchedulesComponent implements OnInit {
         if (confirmAction) {
           this.schedulesService.confirmSchedule(id).pipe(take(1)).subscribe(
             res => {
+              // TODO: Rever forma de passar os parâmetros para a função
+              this.snackBarService.openSnackBar('Agendamento concluído!', '' ,'snackbar-success');
+
               // TODO: Salvar o return no behavior subject
             }
           )
@@ -83,6 +87,9 @@ export class SchedulesComponent implements OnInit {
         if (confirmAction) {
           this.schedulesService.cancelSchedule(id).pipe(take(1)).subscribe(
             res => {
+              // TODO: Rever forma de passar os parâmetros para a função
+              this.snackBarService.openSnackBar('Agendamento cancelado!', '', 'snackbar-fail');
+
               // TODO: Salvar o return no behavior subject
             }
           )
