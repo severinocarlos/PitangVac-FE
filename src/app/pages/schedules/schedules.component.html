@@ -1,11 +1,11 @@
-<div class="p-8">
+<div class="p-8 content">
     <div class="flex items-center justify-between">
         <span class="text-xl">Agendamentos</span>
-        <button mat-flat-button>Fazer agendamento</button>
+        <button (click)="registerSchedule()" mat-flat-button>Fazer agendamento</button>
     </div>
     
     <div class="mt-4">
-        <table class="w-full" mat-table [dataSource]="dataSource" matSort class="mat-elevation-z3">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z3">
         
             <ng-container  matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Ordenar pelo nome">

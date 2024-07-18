@@ -7,6 +7,7 @@ import { SchedulesService } from '../../services/schedules/schedules.service';
 import { Schedules } from '../../interfaces/schedules';
 import { DatePipe } from '@angular/common';
 import { take } from 'rxjs';
+import { ModalService } from '../../services/modal/modal.service';
 
 @Component({
   selector: 'app-schedules',
@@ -25,6 +26,8 @@ export class SchedulesComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   private readonly schedulesService = inject(SchedulesService);
+  private readonly modalService = inject(ModalService);
+
   private schedules: Schedules[] = []
 
   displayedColumns: string[] = ['name', 'status', 'date', 'time', 'scheduleIn', 'actions'];
@@ -47,5 +50,9 @@ export class SchedulesComponent implements OnInit {
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+  }
+
+  registerSchedule() {
+    this.modalService.openScheduleRegisterModal();
   }
 }
