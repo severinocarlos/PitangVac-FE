@@ -1,0 +1,33 @@
+<h5 mat-dialog-title>Realizar agendamento</h5>
+<mat-dialog-content>
+    <form class="grid grid-cols-2 gap-2" [formGroup]="scheduleRegisterForm" (ngSubmit)="handleSchedulingRegister()">
+        <mat-form-field class="w-full">
+            <mat-label>Data de nascimento</mat-label>
+            <input (dateChange)="getHoursAvailable()" formControlName="schedulingDate" matInput [matDatepicker]="dp" />
+            <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp></mat-datepicker>
+            <mat-error *ngIf="scheduleRegisterForm.get('schedulingDate')?.hasError('required')">Campo é
+                obrigatório</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+            <mat-label>Horários disponíveis</mat-label>
+            <mat-select formControlName="schedulingTime">
+                @for (hour of hoursAvailable; track hour) {
+                <mat-option [value]="hour">{{hour}}</mat-option>
+                }
+                @empty {
+                <mat-option>Horários indisponíveis</mat-option>
+                }
+            </mat-select>
+            <mat-error *ngIf="scheduleRegisterForm.get('schedulingTime')?.hasError('required')">Campo é
+                obrigatório</mat-error>
+        </mat-form-field>
+
+        <div></div>
+        <div class="flex flex-row-reverse gap-2 items-center">
+            <button mat-flat-button type="submit">Agendar</button>
+            <button mat-button mat-dialog-close>Cancelar</button>
+        </div>
+    </form>
+</mat-dialog-content>
