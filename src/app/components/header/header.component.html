@@ -4,7 +4,7 @@
         <span class="text-xl">PitangVac</span>
     </div>
     <div>
-        <button mat-button [matMenuTriggerFor]="menu"><mat-icon>person</mat-icon></button>
+        <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>person</mat-icon></button>
         <mat-menu #menu="matMenu">
             <button (click)="logout()" mat-menu-item>Sair <mat-icon>logout</mat-icon></button>
         </mat-menu>

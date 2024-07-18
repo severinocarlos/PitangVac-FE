@@ -1,12 +1,12 @@
 import { Patient } from "./patient";
 
-type status = 'Agendado' | 'Concluído' | 'Cancelado';
+export type Status = 'Agendado' | 'Concluído' | 'Cancelado';
 
 export interface Schedules {
     id: number,
     scheduleDate: string,
     scheduleTime: string,
-    status: status,
+    status: Status,
     createAt: string,
     patient: Patient
 }

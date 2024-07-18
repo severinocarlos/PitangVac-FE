@@ -1,13 +1,16 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { SchedulesService } from '../../services/schedules/schedules.service';
 import { Schedules } from '../../interfaces/schedules';
 import { DatePipe } from '@angular/common';
 import { take } from 'rxjs';
 import { ModalService } from '../../services/modal/modal.service';
+import { StatusCardComponent } from '../../components/status-card/status-card.component';
+import { ScheduleStatus } from '../../enums/statusEnum';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarService } from '../../services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-schedules',
@@ -16,19 +19,19 @@ import { ModalService } from '../../services/modal/modal.service';
     MatIconModule,
     MatButtonModule,
     MatTableModule, 
-    MatSortModule,
-    DatePipe
+    DatePipe,
+    StatusCardComponent
   ],
   templateUrl: './schedules.component.html',
   styleUrl: './schedules.component.scss'
 })
 export class SchedulesComponent implements OnInit {
-  @ViewChild(MatSort) sort!: MatSort;
-
   private readonly schedulesService = inject(SchedulesService);
   private readonly modalService = inject(ModalService);
+  private readonly snackBarService = inject(SnackbarService);
 
-  private schedules: Schedules[] = []
+  private schedules: Schedules[] = [];
+  ScheduleStatus = ScheduleStatus;
 
   displayedColumns: string[] = ['name', 'status', 'date', 'time', 'scheduleIn', 'actions'];
   dataSource = new MatTableDataSource(this.schedules);
@@ -48,11 +51,50 @@ export class SchedulesComponent implements OnInit {
     )
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
-
   registerSchedule() {
     this.modalService.openScheduleRegisterModal();
+  }
+
+  confirmSchedule(id: number) {
+    const title = 'Concluir agendamento'
+    const message = 'Você tem certeza que deseja confirmar que foi atendido(a)?'
+
+    const dialogRef = this.modalService.openActionModal(title, message);
+
+    dialogRef.afterClosed().subscribe(
+      confirmAction => {
+        if (confirmAction) {
+          this.schedulesService.confirmSchedule(id).pipe(take(1)).subscribe(
+            res => {
+              // TODO: Rever forma de passar os parâmetros para a função
+              this.snackBarService.openSnackBar('Agendamento concluído!', '' ,'snackbar-success');
+
+              // TODO: Salvar o return no behavior subject
+            }
+          )
+        }
+      }
+    )
+  }
+
+  cancelSchedule(id: number) {
+    const title = 'Cancelar agendamento'
+    const message = 'Você tem certeza que deseja cancelar seu atendimento?'
+
+    const dialogRef = this.modalService.openActionModal(title, message);
+    dialogRef.afterClosed().subscribe(
+      confirmAction => {
+        if (confirmAction) {
+          this.schedulesService.cancelSchedule(id).pipe(take(1)).subscribe(
+            res => {
+              // TODO: Rever forma de passar os parâmetros para a função
+              this.snackBarService.openSnackBar('Agendamento cancelado!', '', 'snackbar-fail');
+
+              // TODO: Salvar o return no behavior subject
+            }
+          )
+        }
+      }
+    )
   }
 }

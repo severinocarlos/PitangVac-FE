@@ -5,3 +5,19 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+    background-color: transparent !important;
+}
+
+.snackbar-success {
+    background-color: #6BCB77 !important;
+}
+
+.snackbar-info {
+    background-color: #4D96FF !important;
+}
+
+.snackbar-fail {
+    background-color: #FF6B6B !important;
+}

@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { Schedules } from '../../interfaces/schedules';
 import { apiUrl } from '../../../env/api';
 import { ScheduleRegister } from '../../interfaces/schedule-register';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -23,5 +22,13 @@ export class SchedulesService {
 
   saveScheduling(scheduling: ScheduleRegister) {
     return this._http.post(apiUrl + 'Scheduling', scheduling);
+  }
+
+  confirmSchedule(scheduleId: number) {
+    return this._http.post(apiUrl + `Scheduling/status/complete`, { scheduleId });
+  }
+
+  cancelSchedule(scheduleId: number) {
+    return this._http.post(apiUrl + `Scheduling/status/cancel`, { scheduleId });
   }
 }
