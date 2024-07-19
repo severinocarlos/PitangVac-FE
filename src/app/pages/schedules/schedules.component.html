@@ -5,12 +5,11 @@
         <div class="flex items-center gap-3">
             <div class="flex items-center gap-2">
                 <mat-icon class="text-gray-400">filter_list</mat-icon>
-                <span class="text-xs">Meus agendamentos</span>
             </div>
             <div>
                 <mat-chip-listbox #matchip (change)="changedFilter(matchip)">
                     <mat-chip-option value="todos" selected>Todos</mat-chip-option>
-                    <mat-chip-option [value]="ScheduleStatus.Agendado">Agendadados</mat-chip-option>
+                    <mat-chip-option [value]="ScheduleStatus.Agendado">Agendados</mat-chip-option>
                     <mat-chip-option [value]="ScheduleStatus.Concluido">Concluídos</mat-chip-option>
                     <mat-chip-option [value]="ScheduleStatus.Cancelado">Cancelados</mat-chip-option>
                 </mat-chip-listbox>
