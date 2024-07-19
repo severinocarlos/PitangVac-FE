@@ -41,6 +41,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
               }
             });
 
+            loginService.setToken(refreshToken.token);
             return next(newReq);
           })
         );

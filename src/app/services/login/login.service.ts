@@ -30,7 +30,7 @@ export class LoginService {
             throw apiError;
           }
         } else {
-          localStorage.setItem('token', response.token);
+          this.setToken(response.token)
           this.isAuthenticated.next(true);
         }
       })
@@ -49,6 +49,11 @@ export class LoginService {
 
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  setToken(token: string) {
+    localStorage.setItem('token', token);
+
   }
 
   checkAuthentication() {
