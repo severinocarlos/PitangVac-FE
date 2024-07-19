@@ -3,7 +3,7 @@
     <form class="grid grid-cols-2 gap-2" [formGroup]="scheduleRegisterForm" (ngSubmit)="handleSchedulingRegister()">
         <mat-form-field class="w-full">
             <mat-label>Data do agendamento</mat-label>
-            <input (dateChange)="getHoursAvailable()" formControlName="schedulingDate" matInput [matDatepicker]="dp" />
+            <input (dateChange)="getHoursAvailable()" [matDatepickerFilter]="myFilter" formControlName="schedulingDate" matInput [matDatepicker]="dp" />
             <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
             <mat-datepicker #dp></mat-datepicker>
             <mat-error *ngIf="scheduleRegisterForm.get('schedulingDate')?.hasError('required')">Campo é
@@ -22,6 +22,7 @@
             </mat-select>
             <mat-error *ngIf="scheduleRegisterForm.get('schedulingTime')?.hasError('required')">Campo é
                 obrigatório</mat-error>
+            <mat-error *ngIf="scheduleRegisterForm.get('schedulingTime')?.hasError('past')">Não é possível agendar no passado</mat-error>
         </mat-form-field>
 
         <div></div>

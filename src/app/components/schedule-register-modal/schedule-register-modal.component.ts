@@ -1,19 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, inject, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MAT_DATE_LOCALE, MatOptionModule, provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MAT_DIALOG_DATA, MatDialogContent, MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MatDialogContent, MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { SchedulesService } from '../../services/schedules/schedules.service';
 import { take } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
-import { ScheduleRegister } from '../../interfaces/schedule-register';
 import { ApiError } from '../../interfaces/apiError';
-import { Schedules } from '../../interfaces/schedules';
 import { ModalService } from '../../services/modal/modal.service';
 
 @Component({
@@ -49,26 +47,26 @@ export class ScheduleRegisterModalComponent implements OnInit {
   hoursAvailable: string[] = []
 
   scheduleRegisterForm = this.formBuilder.group({
-    schedulingDate: ['', Validators.required],
+    schedulingDate: [new Date(), [Validators.required, this.isDatePast]],
     schedulingTime: ['', Validators.required]
   });
-
   errorMessage = '';
 
   constructor() { }
 
+
   ngOnInit(): void {
-    this.formatISODate();
+    this.getHoursAvailable();
   }
 
   handleSchedulingRegister() {
     this.errorMessage = '';
-
     if (!this.scheduleRegisterForm.valid) {
       return;
     }
 
-    this.scheduleService.saveScheduling(<ScheduleRegister>this.scheduleRegisterForm.value)
+    const ISODate = this.formatISODate(this.schedulingDate);
+    this.scheduleService.saveScheduling(ISODate, this.schedulingTime)
                         .pipe(take(1))
                         .subscribe({
                           next: (_) => {
@@ -86,24 +84,40 @@ export class ScheduleRegisterModalComponent implements OnInit {
   }
 
   getHoursAvailable() {
-    this.scheduleService.getHoursAvailable(this.schedulingDate).pipe(take(1)).subscribe(
+    const ISODate = this.formatISODate(this.schedulingDate);
+
+    this.scheduleService.getHoursAvailable(ISODate).pipe(take(1)).subscribe(
       res => {
         this.hoursAvailable = res;
       }
     )
   }
 
-  formatISODate() {
-    this.scheduleRegisterForm.get('schedulingDate')?.valueChanges.subscribe(value => {
-      if (value) {
-        let isoString = new Date(value).toISOString();
-        isoString = isoString.replace('T03', 'T00');
-        this.scheduleRegisterForm.get('schedulingDate')?.setValue(isoString, { emitEvent: false });
-      }
-    });
+  myFilter(d: Date | null): boolean {
+    const dateChosen = (d || new Date());
+    const today = new Date();
+
+    dateChosen.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    return dateChosen >= today;
+  };
+
+  isDatePast(control: AbstractControl): ValidationErrors | null {
+  const date = control.value;
+
+    return date.getDate() < new Date().getDate() ? { past: true } : null; 
+  }
+
+  formatISODate(date: Date) {
+    let isoString = new Date(date).toISOString();
+    return isoString.replace('T03', 'T00');
   }
 
   get schedulingDate() {
-    return <string>this.scheduleRegisterForm.get('schedulingDate')!.value;
+    return <Date>this.scheduleRegisterForm.get('schedulingDate')!.value;
+  }
+
+  get schedulingTime() {
+    return <string>this.scheduleRegisterForm.get('schedulingTime')!.value;
   }
 }
