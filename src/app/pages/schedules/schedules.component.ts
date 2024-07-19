@@ -1,16 +1,17 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { SchedulesService } from '../../services/schedules/schedules.service';
 import { Schedules } from '../../interfaces/schedules';
 import { DatePipe } from '@angular/common';
-import { take } from 'rxjs';
+import { merge, startWith, switchMap, take, map } from 'rxjs';
 import { ModalService } from '../../services/modal/modal.service';
 import { StatusCardComponent } from '../../components/status-card/status-card.component';
 import { ScheduleStatus } from '../../enums/statusEnum';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackbarService } from '../../services/snackbar/snackbar.service';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { SchedulesPagination } from '../../interfaces/schedules-pagination';
 
 @Component({
   selector: 'app-schedules',
@@ -20,35 +21,42 @@ import { SnackbarService } from '../../services/snackbar/snackbar.service';
     MatButtonModule,
     MatTableModule, 
     DatePipe,
-    StatusCardComponent
+    StatusCardComponent,
+    MatPaginatorModule
   ],
   templateUrl: './schedules.component.html',
   styleUrl: './schedules.component.scss'
 })
-export class SchedulesComponent implements OnInit {
+export class SchedulesComponent implements OnInit, AfterViewInit {
   private readonly schedulesService = inject(SchedulesService);
   private readonly modalService = inject(ModalService);
   private readonly snackBarService = inject(SnackbarService);
 
-  private schedules: Schedules[] = [];
+  schedules: Schedules[] = [];
   ScheduleStatus = ScheduleStatus;
 
   displayedColumns: string[] = ['name', 'status', 'date', 'time', 'scheduleIn', 'actions'];
-  dataSource = new MatTableDataSource(this.schedules);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  pageNumber = 0;
+  pageSize = 10;
+  totalLength = 0;
+  pageSizeOptions = [5, 10];
 
   ngOnInit(): void {
-    this.getSchedules();
   }
 
-  getSchedules() {
-    this.schedules = [];
+  ngAfterViewInit() {
+    merge(this.paginator.page).pipe(
+      startWith({}),
+      switchMap(() => {
+        return this.schedulesService.getSchedules(this.pageNumber, this.pageSize);
+      }),
+      map((pagination: SchedulesPagination) => {
+        this.totalLength = pagination.totalLength;
 
-    this.schedulesService.getSchedules().pipe(take(1)).subscribe(
-      schedules => {
-        this.schedules = schedules;
-        this.dataSource.data = this.schedules;
-      }
-    )
+        return pagination.schedulings;
+      }),
+    ).subscribe((data) => this.schedules = data )
   }
 
   registerSchedule() {

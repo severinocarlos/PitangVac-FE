@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Schedules } from '../../interfaces/schedules';
 import { apiUrl } from '../../../env/api';
 import { ScheduleRegister } from '../../interfaces/schedule-register';
+import { SchedulesPagination } from '../../interfaces/schedules-pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,12 @@ export class SchedulesService {
 
   constructor() { }
 
-  getSchedules() {
-    return this._http.get<Schedules[]>(apiUrl + 'Scheduling');
+  getSchedules(pageNumber: number, pageSize: number) {
+    const params = new HttpParams()
+      .set('pageNumber', pageNumber)
+      .set('pageSize', pageSize);
+
+    return this._http.get<SchedulesPagination>(apiUrl + 'Scheduling', { params });
   }
 
   getHoursAvailable(date: string) {
