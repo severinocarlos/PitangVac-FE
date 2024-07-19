@@ -4,8 +4,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { SchedulesService } from '../../services/schedules/schedules.service';
 import { Schedules } from '../../interfaces/schedules';
-import { DatePipe } from '@angular/common';
-import { merge, startWith, switchMap, take, map } from 'rxjs';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { merge, startWith, switchMap, take, map, Observable } from 'rxjs';
 import { ModalService } from '../../services/modal/modal.service';
 import { StatusCardComponent } from '../../components/status-card/status-card.component';
 import { ScheduleStatus } from '../../enums/statusEnum';
@@ -22,7 +22,8 @@ import { SchedulesPagination } from '../../interfaces/schedules-pagination';
     MatTableModule, 
     DatePipe,
     StatusCardComponent,
-    MatPaginatorModule
+    MatPaginatorModule,
+    AsyncPipe
   ],
   templateUrl: './schedules.component.html',
   styleUrl: './schedules.component.scss'
@@ -31,14 +32,13 @@ export class SchedulesComponent implements OnInit, AfterViewInit {
   private readonly schedulesService = inject(SchedulesService);
   private readonly modalService = inject(ModalService);
   private readonly snackBarService = inject(SnackbarService);
+  schedules$: Observable<Schedules[]> = this.schedulesService.schedules$;
 
   schedules: Schedules[] = [];
   ScheduleStatus = ScheduleStatus;
 
   displayedColumns: string[] = ['name', 'status', 'date', 'time', 'scheduleIn', 'actions'];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  pageNumber = 0;
-  pageSize = 10;
   totalLength = 0;
   pageSizeOptions = [5, 10];
 
@@ -49,7 +49,7 @@ export class SchedulesComponent implements OnInit, AfterViewInit {
     merge(this.paginator.page).pipe(
       startWith({}),
       switchMap(() => {
-        return this.schedulesService.getSchedules(this.pageNumber, this.pageSize);
+        return this.schedulesService.getSchedules(this.paginator.pageIndex, this.paginator.pageSize);
       }),
       map((pagination: SchedulesPagination) => {
         this.totalLength = pagination.totalLength;
