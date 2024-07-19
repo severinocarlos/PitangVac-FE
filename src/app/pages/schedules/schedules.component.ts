@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { SchedulesService } from '../../services/schedules/schedules.service';
 import { Schedules } from '../../interfaces/schedules';
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { merge, startWith, switchMap, take, map, Observable } from 'rxjs';
 import { ModalService } from '../../services/modal/modal.service';
 import { StatusCardComponent } from '../../components/status-card/status-card.component';
@@ -27,7 +27,8 @@ import { BadgeButtonComponent } from '../../components/badge-button/badge-button
     MatPaginatorModule,
     AsyncPipe,
     FooterComponent,
-    BadgeButtonComponent
+    BadgeButtonComponent,
+    CommonModule
   ],
   templateUrl: './schedules.component.html',
   styleUrl: './schedules.component.scss'

@@ -68,6 +68,9 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
+        @if ((schedules$ | async)?.length === 0) {
+            <div class="w-full text-center p-4">Nenhum registro foi encontrado</div>
+        }
     </div>
     <mat-paginator class="rounded-b-xl !bg-white shadow" [length]="totalLength" [pageSize]="5" [pageSizeOptions]="pageSizeOptions"
         showFirstLastButtons>
