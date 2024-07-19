@@ -3,21 +3,28 @@ import { inject, Injectable } from '@angular/core';
 import { apiUrl } from '../../../env/api';
 import { ScheduleRegister } from '../../interfaces/schedule-register';
 import { SchedulesPagination } from '../../interfaces/schedules-pagination';
+import { BehaviorSubject, map, tap } from 'rxjs';
+import { Schedules } from '../../interfaces/schedules';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SchedulesService {
   private readonly _http = inject(HttpClient);
+  private schedulesObservable = new BehaviorSubject<Schedules[]>([]);
+  schedules$ = this.schedulesObservable.asObservable();
 
   constructor() { }
 
-  getSchedules(pageNumber: number, pageSize: number) {
+  getSchedules(pageIndex: number, pageSize: number) {
     const params = new HttpParams()
-      .set('pageNumber', pageNumber)
+      .set('pageNumber', pageIndex)
       .set('pageSize', pageSize);
 
-    return this._http.get<SchedulesPagination>(apiUrl + 'Scheduling', { params });
+    return this._http.get<SchedulesPagination>(apiUrl + 'Scheduling', { params })
+                      .pipe(tap(page => {
+                        this.schedulesObservable.next(page.schedulings);
+                      }));
   }
 
   getHoursAvailable(date: string) {
@@ -25,7 +32,11 @@ export class SchedulesService {
   }
 
   saveScheduling(scheduling: ScheduleRegister) {
-    return this._http.post(apiUrl + 'Scheduling', scheduling);
+    return this._http.post<Schedules>(apiUrl + 'Scheduling', scheduling)
+      .pipe(tap(scheduling => {
+        const oldScheduling = this.schedulesObservable.getValue();
+        this.schedulesObservable.next([...oldScheduling, scheduling]);
+      }));
   }
 
   confirmSchedule(scheduleId: number) {

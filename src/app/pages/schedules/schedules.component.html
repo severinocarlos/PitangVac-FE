@@ -13,7 +13,7 @@
     </div>
     
     <div class="bg-white overflow-auto min-h-96 shadow">
-        <table mat-table [dataSource]="schedules">
+        <table mat-table [dataSource]="schedules$">
         
             <ng-container matColumnDef="name">
                 <th class="text-gray-400 !bg-white" mat-header-cell *matHeaderCellDef>
@@ -72,8 +72,6 @@
         <mat-paginator class="!rounded-b-xl" 
                        [length]="totalLength"
                        [pageSizeOptions]="pageSizeOptions"
-                       [pageIndex]="pageNumber"
-                       [pageSize]="pageSize"
                        showFirstLastButtons>
         </mat-paginator>
     </div>
