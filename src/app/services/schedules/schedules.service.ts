@@ -83,6 +83,18 @@ export class SchedulesService {
       }));;
   }
 
+  getSchedulingByStatus(status: string, pageNumber: number, pageSize: number) {
+    const params = new HttpParams()
+      .set('pageNumber', pageNumber)
+      .set('pageSize', pageSize);
+
+    return this._http.get<SchedulesPagination>(apiUrl + `Scheduling/status/${status}`, { params })
+                    .pipe(tap(page => {
+                    this.schedulesObservable.next(page.schedulings);
+                    this.schedulingQuantityObservable.next(page.totalLength);
+                  }));
+  }
+
   private getUpdatedSchedulingValues(oldScheduling: Schedules[], scheduling: Schedules) {
     return oldScheduling.map((schedulingValue) => {
       return schedulingValue.id === scheduling.id ? scheduling : schedulingValue
