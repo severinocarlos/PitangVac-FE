@@ -1,4 +1,4 @@
-<div class="p-8 bg-gray-100 min-h-screen">
+<div class="py-3 px-8 bg-gray-100 relative content">
     <span class="text-xl p-1">Agendamentos</span>
 
     <div class="bg-white shadow rounded-t-xl mt-3 p-4 flex items-center justify-between">
@@ -12,9 +12,8 @@
         </div>
     </div>
     
-    <div class="bg-white overflow-auto min-h-96 shadow">
+    <div class="bg-white relative max-h-[315px] overflow-auto shadow">
         <table mat-table [dataSource]="schedules$">
-        
             <ng-container matColumnDef="name">
                 <th class="text-gray-400 !bg-white" mat-header-cell *matHeaderCellDef>
                     Nome
@@ -69,10 +68,11 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-        <mat-paginator class="!rounded-b-xl" 
-                       [length]="totalLength"
-                       [pageSizeOptions]="pageSizeOptions"
-                       showFirstLastButtons>
-        </mat-paginator>
+    </div>
+    <mat-paginator class="!rounded-b-xl" [length]="totalLength" [pageSize]="5" [pageSizeOptions]="pageSizeOptions"
+        showFirstLastButtons>
+    </mat-paginator>
+    <div class="absolute left-0 bottom-0 w-full">
+        <app-footer></app-footer>
     </div>
 </div>

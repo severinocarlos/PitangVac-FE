@@ -1,9 +1,8 @@
 .content {
-    height: calc(100% - 10%);
+    height: calc(100% - 11.5%);
 }
 
-.table {
-    width: 100%;
-    max-height: 300px;
-    overflow: auto;
+.mat-mdc-table {
+    max-height: 200px !important;
+    overflow: auto !important;
 }

@@ -12,6 +12,7 @@ import { ScheduleStatus } from '../../enums/statusEnum';
 import { SnackbarService } from '../../services/snackbar/snackbar.service';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { SchedulesPagination } from '../../interfaces/schedules-pagination';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-schedules',
@@ -23,7 +24,8 @@ import { SchedulesPagination } from '../../interfaces/schedules-pagination';
     DatePipe,
     StatusCardComponent,
     MatPaginatorModule,
-    AsyncPipe
+    AsyncPipe,
+    FooterComponent
   ],
   templateUrl: './schedules.component.html',
   styleUrl: './schedules.component.scss'

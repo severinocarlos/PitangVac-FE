@@ -40,10 +40,27 @@ export class SchedulesService {
   }
 
   confirmSchedule(scheduleId: number) {
-    return this._http.post(apiUrl + `Scheduling/status/complete`, { scheduleId });
+    return this._http.post<Schedules>(apiUrl + `Scheduling/status/complete`, { scheduleId })
+      .pipe(tap(scheduling => {
+        let oldScheduling = this.schedulesObservable.getValue();
+
+        let updateValues = oldScheduling.map((schedulingValue) => {
+          return schedulingValue.id === scheduling.id ? scheduling  : schedulingValue
+        });
+
+        this.schedulesObservable.next([...updateValues]);
+      }));;
   }
 
   cancelSchedule(scheduleId: number) {
-    return this._http.post(apiUrl + `Scheduling/status/cancel`, { scheduleId });
+    return this._http.post<Schedules>(apiUrl + `Scheduling/status/cancel`, { scheduleId })
+      .pipe(tap(scheduling => {
+        const oldScheduling = this.schedulesObservable.getValue();
+        let updateValues = oldScheduling.map((schedulingValue) => {
+          return schedulingValue.id === scheduling.id ? scheduling : schedulingValue
+        });
+
+        this.schedulesObservable.next([...updateValues]);
+      }));;
   }
 }
