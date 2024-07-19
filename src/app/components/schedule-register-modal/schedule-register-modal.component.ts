@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ScheduleRegister } from '../../interfaces/schedule-register';
 import { ApiError } from '../../interfaces/apiError';
 import { Schedules } from '../../interfaces/schedules';
+import { ModalService } from '../../services/modal/modal.service';
 
 @Component({
   selector: 'app-schedule-register-modal',
@@ -43,6 +44,7 @@ export class ScheduleRegisterModalComponent implements OnInit {
   private dialogRef = inject(MatDialogRef<ScheduleRegisterModalComponent>);
   private readonly formBuilder = inject(FormBuilder);
   private readonly scheduleService = inject(SchedulesService);
+  private readonly modalService = inject(ModalService);
 
   hoursAvailable: string[] = []
 
@@ -71,6 +73,12 @@ export class ScheduleRegisterModalComponent implements OnInit {
                         .subscribe({
                           next: (_) => {
                             this.dialogRef.close();
+                            this.modalService.openInfoModal(
+                              'Parabéns por realizar o agendamento da vacina, ela salva vidas.',
+                              'task_alt',
+                              'green',
+                              'Agendamento realizado com sucesso!',
+                            );
                           }, error: (error: ApiError) => {
                             this.errorMessage = error.Messages[0];
                           }
