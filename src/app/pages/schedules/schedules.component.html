@@ -13,9 +13,9 @@
     </div>
     
     <div class="bg-white relative max-h-[315px] overflow-auto shadow">
-        <table mat-table [dataSource]="schedules$">
+        <table class="!bg-white" mat-table [dataSource]="schedules$">
             <ng-container matColumnDef="name">
-                <th class="text-gray-400 !bg-white" mat-header-cell *matHeaderCellDef>
+                <th class="text-gray-400" mat-header-cell *matHeaderCellDef>
                     Nome
                 </th>
                 <td mat-cell *matCellDef="let schedule"> {{schedule.patient.name}} </td>
@@ -69,7 +69,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     </div>
-    <mat-paginator class="!rounded-b-xl" [length]="totalLength" [pageSize]="5" [pageSizeOptions]="pageSizeOptions"
+    <mat-paginator class="rounded-b-xl !bg-white shadow" [length]="totalLength" [pageSize]="5" [pageSizeOptions]="pageSizeOptions"
         showFirstLastButtons>
     </mat-paginator>
     <div class="absolute left-0 bottom-0 w-full">
