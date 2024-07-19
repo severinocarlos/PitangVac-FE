@@ -5,7 +5,7 @@ import { MatTableModule } from '@angular/material/table';
 import { SchedulesService } from '../../services/schedules/schedules.service';
 import { Schedules } from '../../interfaces/schedules';
 import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
-import { merge, startWith, switchMap, take, map, Observable } from 'rxjs';
+import { merge, startWith, switchMap, take, map, Observable, switchAll } from 'rxjs';
 import { ModalService } from '../../services/modal/modal.service';
 import { StatusCardComponent } from '../../components/status-card/status-card.component';
 import { ScheduleStatus } from '../../enums/statusEnum';
@@ -14,6 +14,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { SchedulesPagination } from '../../interfaces/schedules-pagination';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { BadgeButtonComponent } from '../../components/badge-button/badge-button.component';
+import { MatChipListbox, MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-schedules',
@@ -28,7 +29,8 @@ import { BadgeButtonComponent } from '../../components/badge-button/badge-button
     AsyncPipe,
     FooterComponent,
     BadgeButtonComponent,
-    CommonModule
+    MatChipsModule,
+    CommonModule,
   ],
   templateUrl: './schedules.component.html',
   styleUrl: './schedules.component.scss'
@@ -80,10 +82,7 @@ export class SchedulesComponent implements OnInit, AfterViewInit {
         if (confirmAction) {
           this.schedulesService.confirmSchedule(id).pipe(take(1)).subscribe(
             res => {
-              // TODO: Rever forma de passar os parâmetros para a função
               this.snackBarService.openSnackBar('Agendamento concluído!', '' ,'snackbar-success');
-
-              // TODO: Salvar o return no behavior subject
             }
           )
         }
@@ -101,14 +100,24 @@ export class SchedulesComponent implements OnInit, AfterViewInit {
         if (confirmAction) {
           this.schedulesService.cancelSchedule(id).pipe(take(1)).subscribe(
             res => {
-              // TODO: Rever forma de passar os parâmetros para a função
               this.snackBarService.openSnackBar('Agendamento cancelado!', '', 'snackbar-fail');
-
-              // TODO: Salvar o return no behavior subject
             }
           )
         }
       }
     )
+  }
+
+  changedFilter(chip: MatChipListbox) {
+    const filter = chip.value;
+    const all = 'todos';
+
+    if (filter === all) {
+      this.schedulesService.getSchedules(this.paginator.pageIndex, this.paginator.pageSize)
+                            .subscribe();
+    } else {
+      this.schedulesService.getSchedulingByStatus(filter, this.paginator.pageIndex, this.paginator.pageSize)
+                            .subscribe();
+    }
   }
 }
