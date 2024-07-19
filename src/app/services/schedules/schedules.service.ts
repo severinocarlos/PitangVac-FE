@@ -26,7 +26,7 @@ export class SchedulesService {
       .set('pageNumber', pageIndex)
       .set('pageSize', pageSize);
 
-    return this._http.get<SchedulesPagination>(apiUrl + 'Scheduling', { params })
+    return this._http.get<SchedulesPagination>(apiUrl + 'Scheduling/patient', { params })
                       .pipe(tap(page => {
                         this.schedulesObservable.next(page.schedulings);
                         this.schedulingQuantityObservable.next(page.totalLength);
