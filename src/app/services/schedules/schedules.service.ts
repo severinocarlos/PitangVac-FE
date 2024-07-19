@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { apiUrl } from '../../../env/api';
 import { ScheduleRegister } from '../../interfaces/schedule-register';
 import { SchedulesPagination } from '../../interfaces/schedules-pagination';
-import { BehaviorSubject, map, tap } from 'rxjs';
+import { BehaviorSubject, map, Subject, tap } from 'rxjs';
 import { Schedules } from '../../interfaces/schedules';
 
 @Injectable({
@@ -11,8 +11,13 @@ import { Schedules } from '../../interfaces/schedules';
 })
 export class SchedulesService {
   private readonly _http = inject(HttpClient);
+
   private schedulesObservable = new BehaviorSubject<Schedules[]>([]);
   schedules$ = this.schedulesObservable.asObservable();
+
+  private schedulingQuantityObservable = new BehaviorSubject<number>(0);
+  schedulingQuantity$ = this.schedulingQuantityObservable.asObservable();
+
 
   constructor() { }
 
@@ -24,6 +29,7 @@ export class SchedulesService {
     return this._http.get<SchedulesPagination>(apiUrl + 'Scheduling', { params })
                       .pipe(tap(page => {
                         this.schedulesObservable.next(page.schedulings);
+                        this.schedulingQuantityObservable.next(page.totalLength);
                       }));
   }
 
@@ -35,18 +41,19 @@ export class SchedulesService {
     return this._http.post<Schedules>(apiUrl + 'Scheduling', scheduling)
       .pipe(tap(scheduling => {
         const oldScheduling = this.schedulesObservable.getValue();
-        this.schedulesObservable.next([...oldScheduling, scheduling]);
+        const newSchedulingList = [...oldScheduling, scheduling];
+        this.schedulesObservable.next(newSchedulingList);
+
+        let oldQuantity = this.schedulingQuantityObservable.getValue();
+        this.schedulingQuantityObservable.next(oldQuantity + 1);
       }));
   }
 
   confirmSchedule(scheduleId: number) {
     return this._http.post<Schedules>(apiUrl + `Scheduling/status/complete`, { scheduleId })
-      .pipe(tap(scheduling => {
+      .pipe(tap((scheduling: Schedules) => {
         let oldScheduling = this.schedulesObservable.getValue();
-
-        let updateValues = oldScheduling.map((schedulingValue) => {
-          return schedulingValue.id === scheduling.id ? scheduling  : schedulingValue
-        });
+        let updateValues = this.getUpdatedSchedulingValues(oldScheduling, scheduling);
 
         this.schedulesObservable.next([...updateValues]);
       }));;
@@ -54,13 +61,17 @@ export class SchedulesService {
 
   cancelSchedule(scheduleId: number) {
     return this._http.post<Schedules>(apiUrl + `Scheduling/status/cancel`, { scheduleId })
-      .pipe(tap(scheduling => {
+      .pipe(tap((scheduling: Schedules) => {
         const oldScheduling = this.schedulesObservable.getValue();
-        let updateValues = oldScheduling.map((schedulingValue) => {
-          return schedulingValue.id === scheduling.id ? scheduling : schedulingValue
-        });
+        let updateValues = this.getUpdatedSchedulingValues(oldScheduling, scheduling);
 
         this.schedulesObservable.next([...updateValues]);
       }));;
+  }
+
+  private getUpdatedSchedulingValues(oldScheduling: Schedules[], scheduling: Schedules) {
+    return oldScheduling.map((schedulingValue) => {
+      return schedulingValue.id === scheduling.id ? scheduling : schedulingValue
+    });
   }
 }
