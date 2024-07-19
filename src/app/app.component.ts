@@ -4,6 +4,7 @@ import { LoginService } from './services/login/login.service';
 import { HeaderComponent } from './components/header/header.component';
 import { AsyncPipe } from '@angular/common';
 import { FooterComponent } from './components/footer/footer.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ import { FooterComponent } from './components/footer/footer.component';
     RouterOutlet, 
     HeaderComponent, 
     AsyncPipe,
-    FooterComponent
+    FooterComponent,
+    LoadingComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
