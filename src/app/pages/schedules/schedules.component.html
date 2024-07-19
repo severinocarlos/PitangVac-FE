@@ -5,7 +5,7 @@
         <mat-icon class="text-gray-400">filter_list</mat-icon>
         
         <div class="flex items-center gap-6">
-            <span class="text-sm">Total</span>
+            <app-badge-button [text]="'Total'" [quantityObserver$]="schedlingQuantity$"></app-badge-button>
             <button (click)="registerSchedule()" mat-flat-button>
                 <mat-icon>add</mat-icon> Agendar
             </button>

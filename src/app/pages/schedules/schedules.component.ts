@@ -13,6 +13,7 @@ import { SnackbarService } from '../../services/snackbar/snackbar.service';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { SchedulesPagination } from '../../interfaces/schedules-pagination';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { BadgeButtonComponent } from '../../components/badge-button/badge-button.component';
 
 @Component({
   selector: 'app-schedules',
@@ -25,7 +26,8 @@ import { FooterComponent } from '../../components/footer/footer.component';
     StatusCardComponent,
     MatPaginatorModule,
     AsyncPipe,
-    FooterComponent
+    FooterComponent,
+    BadgeButtonComponent
   ],
   templateUrl: './schedules.component.html',
   styleUrl: './schedules.component.scss'
@@ -35,6 +37,7 @@ export class SchedulesComponent implements OnInit, AfterViewInit {
   private readonly modalService = inject(ModalService);
   private readonly snackBarService = inject(SnackbarService);
   schedules$: Observable<Schedules[]> = this.schedulesService.schedules$;
+  schedlingQuantity$: Observable<number> = this.schedulesService.schedulingQuantity$;
 
   schedules: Schedules[] = [];
   ScheduleStatus = ScheduleStatus;
