@@ -6,6 +6,8 @@ import { PatientToken } from '../../interfaces/patientToken';
 import { BehaviorSubject, tap } from 'rxjs';
 import { ApiError } from '../../interfaces/apiError';
 import { Router } from '@angular/router';
+import { jwtDecode, JwtPayload } from "jwt-decode";
+
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +55,23 @@ export class LoginService {
 
   setToken(token: string) {
     localStorage.setItem('token', token);
+  }
 
+  getTokenDecoded() {
+    const token = this.getToken();
+    return jwtDecode(token!) as JwtInfo;
+  }
+
+  getPatientId() {
+    const tokenDecoded = this.getTokenDecoded();
+
+    return parseInt(tokenDecoded.id);
+  }
+
+  getPatientName() {
+    const tokenDecoded = this.getTokenDecoded();
+
+    return tokenDecoded.aud;
   }
 
   checkAuthentication() {
@@ -63,4 +81,10 @@ export class LoginService {
       this.isAuthenticated.next(true);
     }
   }
+}
+
+interface JwtInfo {
+  id: string,
+  login: string,
+  aud: string
 }

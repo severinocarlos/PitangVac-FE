@@ -17,8 +17,10 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class HeaderComponent {
   private readonly loginService = inject(LoginService);
+  namePatient = this.loginService.getPatientName();
 
   logout() {
     this.loginService.logout();
-  } 
+  }
+
 }

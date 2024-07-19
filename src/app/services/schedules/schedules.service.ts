@@ -3,14 +3,16 @@ import { inject, Injectable } from '@angular/core';
 import { apiUrl } from '../../../env/api';
 import { ScheduleRegister } from '../../interfaces/schedule-register';
 import { SchedulesPagination } from '../../interfaces/schedules-pagination';
-import { BehaviorSubject, map, Subject, tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { Schedules } from '../../interfaces/schedules';
+import { LoginService } from '../login/login.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SchedulesService {
   private readonly _http = inject(HttpClient);
+  private readonly loginService = inject(LoginService);
 
   private schedulesObservable = new BehaviorSubject<Schedules[]>([]);
   schedules$ = this.schedulesObservable.asObservable();
@@ -26,7 +28,9 @@ export class SchedulesService {
       .set('pageNumber', pageIndex)
       .set('pageSize', pageSize);
 
-    return this._http.get<SchedulesPagination>(apiUrl + 'Scheduling/patient', { params })
+    const patientId = this.loginService.getPatientId();
+
+    return this._http.get<SchedulesPagination>(apiUrl + `Scheduling/${patientId}`, { params })
                       .pipe(tap(page => {
                         this.schedulesObservable.next(page.schedulings);
                         this.schedulingQuantityObservable.next(page.totalLength);
@@ -37,8 +41,14 @@ export class SchedulesService {
     return this._http.get<string[]>(apiUrl + `Scheduling/hours-avaliable/${date}`);
   }
 
-  saveScheduling(scheduling: ScheduleRegister) {
-    return this._http.post<Schedules>(apiUrl + 'Scheduling', scheduling)
+  saveScheduling(date: string, time: string) {
+    const schedulingBody: ScheduleRegister = {
+      schedulingDate: date,
+      schedulingTime: time,
+      patientId: this.loginService.getPatientId()
+    }
+
+    return this._http.post<Schedules>(apiUrl + 'Scheduling', schedulingBody)
       .pipe(tap(scheduling => {
         const oldScheduling = this.schedulesObservable.getValue();
         const newSchedulingList = [...oldScheduling, scheduling];
@@ -50,7 +60,9 @@ export class SchedulesService {
   }
 
   confirmSchedule(scheduleId: number) {
-    return this._http.post<Schedules>(apiUrl + `Scheduling/status/complete`, { scheduleId })
+    const patientId = this.loginService.getPatientId();
+
+    return this._http.post<Schedules>(apiUrl + `Scheduling/status/complete`, { scheduleId, patientId })
       .pipe(tap((scheduling: Schedules) => {
         let oldScheduling = this.schedulesObservable.getValue();
         let updateValues = this.getUpdatedSchedulingValues(oldScheduling, scheduling);
@@ -60,7 +72,9 @@ export class SchedulesService {
   }
 
   cancelSchedule(scheduleId: number) {
-    return this._http.post<Schedules>(apiUrl + `Scheduling/status/cancel`, { scheduleId })
+    const patientId = this.loginService.getPatientId();
+
+    return this._http.post<Schedules>(apiUrl + `Scheduling/status/cancel`, { scheduleId, patientId })
       .pipe(tap((scheduling: Schedules) => {
         const oldScheduling = this.schedulesObservable.getValue();
         let updateValues = this.getUpdatedSchedulingValues(oldScheduling, scheduling);
