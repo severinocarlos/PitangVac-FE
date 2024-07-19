@@ -15,6 +15,8 @@ import { ApiError } from '../../interfaces/apiError';
 import { PatientRegister } from '../../interfaces/patient-register';
 import { Router } from '@angular/router';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { finalize } from 'rxjs';
+import { LoadingService } from '../../services/loading/loading.service';
 
 @Component({
   selector: 'app-register',
@@ -40,9 +42,11 @@ import { FooterComponent } from '../../components/footer/footer.component';
 })
 export class RegisterComponent implements OnInit {
   hide = signal(true);
-  formBuilder = inject(FormBuilder);
-  patientService = inject(PatientService);
-  router = inject(Router);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly patientService = inject(PatientService);
+  private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
+
 
   registerForm = this.formBuilder.group({
     name: ['', Validators.required],
@@ -60,8 +64,12 @@ export class RegisterComponent implements OnInit {
     if (!this.registerForm.valid) {
       return;
     }
-    
-    this.patientService.register(<PatientRegister>this.registerForm.value).subscribe({
+    this.loadingService.show();
+    this.patientService.register(<PatientRegister>this.registerForm.value).pipe(
+      finalize(() => {
+        this.loadingService.hide();
+      })
+    ).subscribe({
       next: (res) => {
         this.router.navigate(['login']);
       }, error: (_: ApiError) => {

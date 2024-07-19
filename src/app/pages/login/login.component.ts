@@ -10,6 +10,9 @@ import { ApiError } from '../../interfaces/apiError';
 import { Router, RouterLink } from '@angular/router';
 import { BaseBackgroundComponent } from '../../components/base-background/base-background.component';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { LoadingService } from '../../services/loading/loading.service';
+import { finalize } from 'rxjs';
+import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 
 
 @Component({
@@ -29,9 +32,10 @@ import { FooterComponent } from '../../components/footer/footer.component';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  formBuilder = inject(FormBuilder);
-  loginService = inject(LoginService);
-  router = inject(Router);
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly loginService = inject(LoginService);
+  private readonly router = inject(Router);
+  private readonly loadingService = inject(LoadingService);
   
   loginForm = this.formBuilder.group({
     login: ['', [Validators.required, Validators.maxLength(50)]],
@@ -45,7 +49,12 @@ export class LoginComponent {
       return;
     }
 
-    this.loginService.login(<Login>this.loginForm.value).subscribe({
+    this.loadingService.show();
+    this.loginService.login(<Login>this.loginForm.value).pipe(
+      finalize(() => {
+        this.loadingService.hide();
+      })
+    ).subscribe({
       next: (_) => {
         this.invalidLoginMessage = '';
         this.router.navigate(['agendamentos']);
