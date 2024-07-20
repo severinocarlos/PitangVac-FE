@@ -13,6 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { ApiError } from '../../interfaces/apiError';
 import { ModalService } from '../../services/modal/modal.service';
+import { Schedules } from '../../interfaces/schedules';
 
 @Component({
   selector: 'app-schedule-register-modal',
@@ -69,7 +70,10 @@ export class ScheduleRegisterModalComponent implements OnInit {
     this.scheduleService.saveScheduling(ISODate, this.schedulingTime)
                         .pipe(take(1))
                         .subscribe({
-                          next: (_) => {
+                          next: (schedules: Schedules | ApiError) => {
+                            if ('Messages' in schedules) {
+                              this.errorMessage = schedules.Messages[0];
+                            }
                             this.dialogRef.close();
                             this.modalService.openInfoModal(
                               'Parabéns por realizar o agendamento da vacina, ela salva vidas.',

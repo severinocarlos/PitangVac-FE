@@ -25,7 +25,7 @@
             <mat-error *ngIf="scheduleRegisterForm.get('schedulingTime')?.hasError('past')">Não é possível agendar no passado</mat-error>
         </mat-form-field>
 
-        <div></div>
+        <div class="text-red-500">{{errorMessage}}</div>
         <div class="flex flex-row-reverse gap-2 items-center">
             <button mat-flat-button type="submit">Agendar</button>
             <button mat-button mat-dialog-close>Cancelar</button>
