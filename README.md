@@ -1,27 +1,41 @@
 # PitangVac
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.4.
+> O repositório é destinado para o desafio final do programa de estágio Pitang
 
-## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Como rodar:
 
-## Code scaffolding
+### Node
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+> Para rodar o projeto primeiramente você tem que ter o node instalado na sua máquina, preferencialmente eu aconselho ter o NVM (Node Version Management) que basicamente funciona para gerenciar a versão do node na sua máquina
 
-## Build
+> Link: [NVM-Tutorial](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+> Com o nvm instalado você deve instalar a versão 20.14.0:
 
-## Running unit tests
+```sh
+nvm install v20.14.0 
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Angular CLI
 
-## Running end-to-end tests
+> Agora com o node instalado precisamos instalar o Angular CLI, para conseguir rodar os projeto angular
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```sh
+npm i -g @angular/cli
+```
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Rodar o projeto
+
+> Agora você deve abrir o repositório do projeto no editor da sua escolha, agora iremos baixar as dependências do projeto para que ela possa rodar:
+
+```sh
+npm i
+```
+
+> Agora sim... iremos rodar o projeto usando:
+
+```sh
+ng serve --open
+```
