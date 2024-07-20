@@ -5,15 +5,17 @@ import { catchError, switchMap, tap } from 'rxjs';
 import { ApiError } from '../interfaces/apiError';
 import { PatientToken } from '../interfaces/patientToken';
 
-const urlIgnore = 'login';
+const urlLogin = 'login';
+const urlRegister = 'register'
+const urlExist = 'exist'
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   const loginService = inject(LoginService);
-
   const token = loginService.getToken();
+  const url = req.url;
 
-  const isLoginEndpoint = req.url.slice(-5);
-  if (urlIgnore !== isLoginEndpoint) {
+  
+  if (!(url.includes(urlLogin)) && !(url.includes(urlRegister)) && !url.includes(urlExist)) {
     const bearerToken = `Bearer ${token}`;
     req = req.clone({
       setHeaders: {

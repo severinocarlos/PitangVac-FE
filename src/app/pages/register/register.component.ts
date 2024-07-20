@@ -64,6 +64,7 @@ export class RegisterComponent implements OnInit {
     if (!this.registerForm.valid) {
       return;
     }
+
     this.loadingService.show();
     this.patientService.register(<PatientRegister>this.registerForm.value).pipe(
       finalize(() => {
