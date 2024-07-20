@@ -71,7 +71,7 @@ export class LoginService {
   getPatientName() {
     const tokenDecoded = this.getTokenDecoded();
 
-    return tokenDecoded.aud;
+    return tokenDecoded.name;
   }
 
   checkAuthentication() {
@@ -86,5 +86,5 @@ export class LoginService {
 interface JwtInfo {
   id: string,
   login: string,
-  aud: string
+  name: string
 }
